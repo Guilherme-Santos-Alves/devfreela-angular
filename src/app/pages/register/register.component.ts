@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -30,12 +31,11 @@ export class RegisterComponent implements OnInit {
   cadastrar() {
       // Checa se alguma role foi checada.
       if (this.checkIfAnyRoleIsChecked() === false) {
-        alert('marque algum role');
-          // Swal.fire(
-          //     'Algo de errado...',
-          //     'Marque alguma role!',
-          //     'error'
-          // )
+          Swal.fire(
+              'Algo de errado...',
+              'Marque alguma role!',
+              'error'
+          )
           return;
       }
 
@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
       }
 
       // Enviar para API
-      fetch("https://622cd1e6087e0e041e147214.mockapi.io/api/users", {
+      fetch("https://67563a3811ce847c992c3095.mockapi.io/api/users", {
               method: 'POST',
               body: JSON.stringify(payload),
               headers: {
@@ -58,29 +58,20 @@ export class RegisterComponent implements OnInit {
           })
           .then(response => response.json())
           .then(response => {
+              Swal.fire({
+                  title: 'Bom Trabalho!',
+                  text: "Cadastrado com sucesso!",
+                  icon: 'success',
+                  confirmButtonText: 'Ok!'
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      localStorage.setItem("userName", response.fullName);
+                      localStorage.setItem("role", response.role === "dev" ? "Desenvolvedor" : "Cliente");
+                      localStorage.setItem("idClient", response.id);
 
-            alert('cadastrado com sucesso');
-
-            localStorage.setItem("userName", response.fullName);
-            localStorage.setItem("role", response.role === "dev" ? "Desenvolvedor" : "Cliente");
-            localStorage.setItem("idClient", response.id);
-
-            window.location.href = "list.html";
-
-              // Swal.fire({
-              //     title: 'Bom Trabalho!',
-              //     text: "Cadastrado com sucesso!",
-              //     icon: 'success',
-              //     confirmButtonText: 'Ok!'
-              // }).then((result) => {
-              //     if (result.isConfirmed) {
-              //         localStorage.setItem("userName", response.fullName);
-              //         localStorage.setItem("role", response.role === "dev" ? "Desenvolvedor" : "Cliente");
-              //         localStorage.setItem("idClient", response.id);
-
-              //         window.location.href = "list.html";
-              //     }
-              // })
+                      window.location.href = "list.html";
+                  }
+              })
           })
   }
 

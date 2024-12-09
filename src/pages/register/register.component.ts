@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -28,11 +30,12 @@ export class RegisterComponent implements OnInit {
   cadastrar() {
       // Checa se alguma role foi checada.
       if (this.checkIfAnyRoleIsChecked() === false) {
-          Swal.fire(
-              'Algo de errado...',
-              'Marque alguma role!',
-              'error'
-          )
+        alert('marque algum role');
+          // Swal.fire(
+          //     'Algo de errado...',
+          //     'Marque alguma role!',
+          //     'error'
+          // )
           return;
       }
 
@@ -55,20 +58,29 @@ export class RegisterComponent implements OnInit {
           })
           .then(response => response.json())
           .then(response => {
-              Swal.fire({
-                  title: 'Bom Trabalho!',
-                  text: "Cadastrado com sucesso!",
-                  icon: 'success',
-                  confirmButtonText: 'Ok!'
-              }).then((result) => {
-                  if (result.isConfirmed) {
-                      localStorage.setItem("userName", response.fullName);
-                      localStorage.setItem("role", response.role === "dev" ? "Desenvolvedor" : "Cliente");
-                      localStorage.setItem("idClient", response.id);
 
-                      window.location.href = "list.html";
-                  }
-              })
+            alert('cadastrado com sucesso');
+
+            localStorage.setItem("userName", response.fullName);
+            localStorage.setItem("role", response.role === "dev" ? "Desenvolvedor" : "Cliente");
+            localStorage.setItem("idClient", response.id);
+
+            window.location.href = "list.html";
+
+              // Swal.fire({
+              //     title: 'Bom Trabalho!',
+              //     text: "Cadastrado com sucesso!",
+              //     icon: 'success',
+              //     confirmButtonText: 'Ok!'
+              // }).then((result) => {
+              //     if (result.isConfirmed) {
+              //         localStorage.setItem("userName", response.fullName);
+              //         localStorage.setItem("role", response.role === "dev" ? "Desenvolvedor" : "Cliente");
+              //         localStorage.setItem("idClient", response.id);
+
+              //         window.location.href = "list.html";
+              //     }
+              // })
           })
   }
 

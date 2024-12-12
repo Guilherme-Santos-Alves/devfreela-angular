@@ -10,9 +10,12 @@ import Swal from 'sweetalert2';
 })
 export class RegisterComponent implements OnInit {
 
+  minhaVar: string = ''
+
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
   checkIfAnyRoleIsChecked() {

@@ -1,27 +1,27 @@
 import { Component, OnInit } from '@angular/core';
+import { IUser } from './interfaces/IUser';
 
 @Component({
-  selector: 'app-ld-header',
+  selector: 'ld-header',
   templateUrl: './ld-header.component.html',
   styleUrls: ['./ld-header.component.scss']
 })
 export class LdHeaderComponent implements OnInit {
 
-  constructor() { }
+  user: IUser = {};
 
   ngOnInit(): void {
     this.buildHeader();
   }
 
   checkIfUserIsLogged() {
-    return localStorage.getItem("userName") && localStorage.getItem("role");
+    return localStorage.getItem("userName") != null && localStorage.getItem("role") != null;
   }
 
   buildHeader() {
     if (this.checkIfUserIsLogged()){
-      // tabela com user
-    } else{
-      // tabela simples
+      this.user.name = localStorage.getItem("userName") || '';
+      this.user.role = localStorage.getItem("role") || '';
     }
   }
 }

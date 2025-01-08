@@ -5,8 +5,6 @@ import { RegisterRoutingModule } from './register-routing.module';
 import { LdButtonModule } from 'src/app/shared/components/ld-button/ld-button.module';
 import { LdWrapperModule } from 'src/app/features/ld-wrapper/ld-wrapper.module';
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
@@ -19,9 +17,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     RegisterRoutingModule,
     LdButtonModule,
     LdWrapperModule,
-    MatSelectModule,
     MatInputModule,
-    MatFormFieldModule,
+    MatFormFieldModule
   ]
 })
 export class RegisterModule { }

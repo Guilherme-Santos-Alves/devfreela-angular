@@ -1,40 +1,59 @@
 <div class="ld-register">
     <ld-wrapper>
-        <form class="left" (submit)="cadastrar()" action="javascript:void(0)">
+        <form class="left" (submit)="cadastrar()" [formGroup]="registerForm">
             <h1 class="main-title">
                 <span class="up">Olá!</span>
                 <span class="down">Vamos criar seu cadastro.</span>
             </h1>
 
-            <mat-form-field appearance="legacy">
-                <mat-label>Input</mat-label>
-                <input matInput>
-            </mat-form-field>
-    
+            {{ registerForm.value | json }}
+
             <div class="radio-buttons">
                 <h3 class="title">Qual o seu perfil?</h3>
                 <div class="buttons">
                     <label class="ld-radio">
                         Dev
-                        <input name="role" type="radio">
+                        <input name="role" type="radio" (click)="toogleRole('dev')">
                         <span class="checkmark"></span>
+
                     </label>
     
                     <label class="ld-radio">
                         Cliente
-                        <input name="role" type="radio">
+                        <input name="role" type="radio" (click)="toogleRole('cliente')">
                         <span class="checkmark"></span>
                     </label>
+                    
                 </div>
+                <span class="input-error-msg" *ngIf="isInvalid('role', 'required')">preencha uma role acima</span>
             </div>
-    
-            <input required id="fullName" class="ld-input" placeholder="Nome completo">
-            <input required id="birthdate" type="date" class="ld-input" placeholder="Data de nascimento">
-            <input required id="email" type="email" class="ld-input" placeholder="Email">
-            <input required id="password" type="password" class="ld-input" placeholder="Senha">
-    
-            <ld-button teste="oi" textBtn="ok"></ld-button>
-    
+            
+            <mat-form-field appearance="legacy">
+                <mat-label>Nome completo</mat-label>
+                <input type="text" matInput formControlName="fullName">
+                <mat-error *ngIf="isInvalid('fullName', 'required')">{{ msg.required }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="legacy">
+                <mat-label>Data de nascimento</mat-label>
+                <input type="date" matInput formControlName="birthdate">
+                <mat-error *ngIf="isInvalid('birthdate', 'required')">{{ msg.required }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="legacy">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email">
+                <mat-error *ngIf="isInvalid('email', 'required')">{{ msg.required }}</mat-error>
+                <mat-error *ngIf="isInvalid('email', 'email')">{{ msg.email }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="legacy">
+                <mat-label>Senha</mat-label>
+                <input type="password" matInput formControlName="password">
+                <mat-error *ngIf="isInvalid('password', 'required')">{{ msg.required }}</mat-error>
+            </mat-form-field>
+
+            <ld-button textBtn="ok"></ld-button>
         </form>
         <div class="right">
             <img class="image" alt="Fundo de decoração com 3 cubos com fundo gradient das cores do arco-iris"

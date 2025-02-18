@@ -7,6 +7,7 @@ import { LdWrapperModule } from 'src/app/features/ld-wrapper/ld-wrapper.module';
 
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     LdButtonModule,
     LdWrapperModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    ReactiveFormsModule
   ]
 })
 export class RegisterModule { }

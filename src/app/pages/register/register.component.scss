@@ -30,6 +30,12 @@
             >.buttons>.ld-radio {
                 margin-right: 70px;
             }
+
+            >.input-error-msg{
+                color: var(--ld-color-danger);
+                font-weight: 100;
+                font-size: 14px;
+            }
         }
 
         >.steps {

@@ -1,7 +1,9 @@
 <div class="ld-wrapper">
     <ld-header></ld-header>
 
-    <main class="main-content">
+    <main class="main-content"
+        [class.-one-col]="typeCol === 'one-col'"
+    >
         <ng-content></ng-content>
     </main>
 </div>

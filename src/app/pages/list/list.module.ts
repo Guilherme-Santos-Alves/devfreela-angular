@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { ListRoutingModule } from './list-routing.module';
 import { LdWrapperModule } from 'src/app/features/ld-wrapper/ld-wrapper.module';
+import { LdButtonModule } from 'src/app/shared/components/ld-button/ld-button.module';
+
 
 
 
@@ -13,7 +15,8 @@ import { LdWrapperModule } from 'src/app/features/ld-wrapper/ld-wrapper.module';
   imports: [
     CommonModule,
     ListRoutingModule,
-    LdWrapperModule
+    LdWrapperModule,
+    LdButtonModule
   ]
 })
 export class ListModule { }

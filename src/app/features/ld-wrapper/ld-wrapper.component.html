@@ -4,6 +4,10 @@
     <main class="main-content"
         [class.-one-col]="typeCol === 'one-col'"
     >
+        <a *ngIf=" backBtn !== '' " class="back-btn material-icons" (click)="redirectTo('list')">
+            keyboard_arrow_left
+        </a>
+
         <ng-content></ng-content>
     </main>
 </div>

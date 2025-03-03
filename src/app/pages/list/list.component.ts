@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IListItem } from './interfaces/IListItem';
 import { ListService } from './services/list.service';
+import { NavigationBehaviorOptions, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -10,7 +11,7 @@ import { ListService } from './services/list.service';
 
 export class ListComponent implements OnInit {
 
-  constructor(private listService: ListService) {}
+  constructor(private listService: ListService, private router: Router) {}
 
   list: IListItem[] = [];
   tableIsLoaded: boolean = false;
@@ -34,9 +35,6 @@ export class ListComponent implements OnInit {
     this.list = this.list.filter((listItem: IListItem) => listItem.idClient === Number(idClient));
   }
 
-  goToEdit(id: string) {
-    window.location.href = `project-create-edit.html?id=${id}`;
-  }
 
   deleteProject(id: string) {
     this.listService.deleteProject(id).subscribe(
@@ -45,5 +43,19 @@ export class ListComponent implements OnInit {
         this.buildTable();
       }
     )
+  }
+
+  redirectTo(url: string) {
+    this.router.navigateByUrl(url);
+  }
+
+  redirectToWithParams(url: string, id: string) {
+    const dataParams: NavigationBehaviorOptions = {
+      state: {
+        id: id
+      }
+    }
+
+    this.router.navigate([`/${url}`], dataParams);
   }
 }

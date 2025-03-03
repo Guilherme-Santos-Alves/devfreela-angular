@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-create-edit',
@@ -7,76 +8,74 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ProjectCreateEditComponent implements OnInit {
 
-    // Pega os parametros da URL
-  urlSearchParams = new URLSearchParams(window.location.search);
-  params: any = Object.fromEntries(this.urlSearchParams.entries());
-  // Type: 'create' | 'edit'
-  screenType = this.params.id; 
+    id: string;
+    screenType: 'edit' | 'create';
 
-  constructor() { }
+    constructor(private router: Router) { 
+        this.id = history.state.id;
+        console.log(this.id);
+        this.screenType = this.id? 'edit' : 'create';
+    }
 
-  ngOnInit(): void {
-    this.setScreenTypeTexts();
-    this.fillInputs();
-  }
+    ngOnInit(): void {
+        this.setScreenTypeTexts();
+        this.fillInputs();
+    }
 
+    createOrEdit() {
+        //Inicia a massa de dados (payload)
+        let payload = {
+            title: (document.querySelector("#title") as any).value,
+            totalCost: (document.querySelector("#totalCost")as any).value,
+            description: (document.querySelector("#description")as any).value,
+            idClient: localStorage.getItem("idClient")
+        }
 
+        //Enviar para API
+        fetch(`https://622cd1e6087e0e041e147214.mockapi.io/api/projects${this.screenType === 'edit' ? ('/' + this.id) : ''}`, {
+                method: this.screenType === 'edit' ? 'PUT' : 'POST',
+                body: JSON.stringify(payload),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(response => {
+                if (this.screenType === 'edit') {
+                    alert('Editado com sucesso!');
+                } else {
+                    alert('Cadastrado com sucesso!');
+                }
 
+                this.router.navigateByUrl('list');
 
+            })
+    }
 
-   createOrEdit() {
-      //Inicia a massa de dados (payload)
-      let payload = {
-          title: (document.querySelector("#title") as any).value,
-          totalCost: (document.querySelector("#totalCost")as any).value,
-          description: (document.querySelector("#description")as any).value,
-          idClient: localStorage.getItem("idClient")
-      }
+    fillInputs() {
+        if (this.screenType === 'edit') {
+            fetch(`https://622cd1e6087e0e041e147214.mockapi.io/api/projects/${this.id}`)
+                .then(response => response.json())
+                .then(project => {
+                    (document.querySelector("#title")as any).value = project.title;
+                    (document.querySelector("#totalCost")as any).value = project.totalCost;
+                    (document.querySelector("#description")as any).value = project.description;
+                })
+        }
+    }
 
-      //Enviar para API
-      fetch(`https://622cd1e6087e0e041e147214.mockapi.io/api/projects${this.screenType === 'edit' ? ('/' + this.params.id) : ''}`, {
-              method: this.screenType === 'edit' ? 'PUT' : 'POST',
-              body: JSON.stringify(payload),
-              headers: {
-                  'Content-Type': 'application/json'
-              }
-          })
-          .then(response => response.json())
-          .then(response => {
-              if (this.screenType === 'edit') {
-                  alert('Editado com sucesso!');
-              } else {
-                  alert('Cadastrado com sucesso!');
-              }
+    setScreenTypeTexts() {
+        //MODO CRIAR
+        if (this.screenType == 'create') {
+            (document.querySelector('#main-title') as any).innerText = "Vamos cadastrar seu novo projeto!";
+            (document.querySelector('#action-button') as any).innerText = "Cadastrar";
+        }
 
-              window.location.href = "list.html";
-          })
-  }
-
-   fillInputs() {
-      if (this.screenType === 'edit') {
-          fetch(`https://622cd1e6087e0e041e147214.mockapi.io/api/projects/${this.params.id}`)
-              .then(response => response.json())
-              .then(project => {
-                  (document.querySelector("#title")as any).value = project.title;
-                  (document.querySelector("#totalCost")as any).value = project.totalCost;
-                  (document.querySelector("#description")as any).value = project.description;
-              })
-      }
-  }
-
-   setScreenTypeTexts() {
-      //MODO CRIAR
-      if (this.screenType == 'create') {
-          (document.querySelector('#main-title') as any).innerText = "Vamos cadastrar seu novo projeto!";
-          (document.querySelector('#action-button') as any).innerText = "Cadastrar";
-      }
-
-      //MODO EDITAR
-      if (this.screenType == 'edit') {
-          (document.querySelector('#main-title') as any).innerText = "Editar projeto";
-          (document.querySelector('#action-button') as any).innerText = "Salvar";
-      }
-  }
+        //MODO EDITAR
+        if (this.screenType == 'edit') {
+            (document.querySelector('#main-title') as any).innerText = "Editar projeto";
+            (document.querySelector('#action-button') as any).innerText = "Salvar";
+        }
+    }
 
 }

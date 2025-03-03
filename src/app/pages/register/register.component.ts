@@ -7,6 +7,7 @@ import { msg } from 'src/app/shared/util/msg';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { RegisterService } from './services/register.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { RegisterService } from './services/register.service';
 })
 export class RegisterComponent implements OnInit {
 
-    constructor(private fb: FormBuilder, private registerService: RegisterService) { }
+    constructor(private fb: FormBuilder, private registerService: RegisterService, private router: Router) { }
 
     msg = msg;
     registerForm :FormGroup = this.fb.group({
@@ -65,6 +66,8 @@ export class RegisterComponent implements OnInit {
                             localStorage.setItem("userName", response.fullName);
                             localStorage.setItem("role", response.role === "dev" ? "Desenvolvedor" : "Cliente");
                             localStorage.setItem("idClient", response.id);
+
+                            this.router.navigateByUrl('list');
                         }
                     })
                 }, (error) => {

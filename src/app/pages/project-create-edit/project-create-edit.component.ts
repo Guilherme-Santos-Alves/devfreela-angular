@@ -1,5 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ProjectCEService } from './services/project-create-edit.service';
+import { IProject } from 'src/app/shared/interfaces/IProject';
+import { IDynamicText } from './interfaces/IDynamicText';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { msg } from 'src/app/shared/util/msg';
+import { title } from 'process';
 
 @Component({
   selector: 'app-project-create-edit',
@@ -11,9 +17,20 @@ export class ProjectCreateEditComponent implements OnInit {
     id: string;
     screenType: 'edit' | 'create';
 
-    constructor(private router: Router) { 
+    dynamicText: IDynamicText = {
+        title: '',
+        btn: ''
+    }
+
+    projectForm :FormGroup = this.fb.group({
+        title: ['', [Validators.required]],
+        totalCost: ['', [Validators.required]],
+        description: ['', [Validators.required]]
+    })
+    msg = msg;
+
+    constructor(private router: Router, private ProjectCEService: ProjectCEService, private fb: FormBuilder) { 
         this.id = history.state.id;
-        console.log(this.id);
         this.screenType = this.id? 'edit' : 'create';
     }
 
@@ -23,59 +40,69 @@ export class ProjectCreateEditComponent implements OnInit {
     }
 
     createOrEdit() {
-        //Inicia a massa de dados (payload)
-        let payload = {
-            title: (document.querySelector("#title") as any).value,
-            totalCost: (document.querySelector("#totalCost")as any).value,
-            description: (document.querySelector("#description")as any).value,
-            idClient: localStorage.getItem("idClient")
+        if (this.projectForm.valid){
+            let payload: IProject = this.projectForm.value;
+            payload.idClient = Number(localStorage.getItem("idClient"));
+
+    
+            if (this.screenType === 'create'){
+                this.ProjectCEService.postProject(payload).subscribe(
+                    (response) => {
+                        alert('Cadastrado com sucesso!');
+                        this.router.navigateByUrl('list');
+                    }
+                )
+            } 
+    
+            if (this.screenType === 'edit'){
+                this.ProjectCEService.putProject(payload).subscribe(
+                    (response) => {
+                        alert('Editado com sucesso!');
+                        this.router.navigateByUrl('list');
+                    }
+                )
+            }
+        } else {
+            this.projectForm.markAllAsTouched();
         }
-
-        //Enviar para API
-        fetch(`https://622cd1e6087e0e041e147214.mockapi.io/api/projects${this.screenType === 'edit' ? ('/' + this.id) : ''}`, {
-                method: this.screenType === 'edit' ? 'PUT' : 'POST',
-                body: JSON.stringify(payload),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(response => {
-                if (this.screenType === 'edit') {
-                    alert('Editado com sucesso!');
-                } else {
-                    alert('Cadastrado com sucesso!');
-                }
-
-                this.router.navigateByUrl('list');
-
-            })
     }
+
+    
 
     fillInputs() {
         if (this.screenType === 'edit') {
-            fetch(`https://622cd1e6087e0e041e147214.mockapi.io/api/projects/${this.id}`)
-                .then(response => response.json())
-                .then(project => {
-                    (document.querySelector("#title")as any).value = project.title;
-                    (document.querySelector("#totalCost")as any).value = project.totalCost;
-                    (document.querySelector("#description")as any).value = project.description;
-                })
+            this.ProjectCEService.getProject(Number(this.id)).subscribe(
+                (response: any) => {
+
+                    this.projectForm.patchValue({
+                        title: response.title,
+                        totalCost: response.totalCost,
+                        description: response.description
+                    })
+                }
+            )
         }
     }
 
     setScreenTypeTexts() {
         //MODO CRIAR
-        if (this.screenType == 'create') {
-            (document.querySelector('#main-title') as any).innerText = "Vamos cadastrar seu novo projeto!";
-            (document.querySelector('#action-button') as any).innerText = "Cadastrar";
+        if (this.screenType === 'edit') {
+            this.dynamicText.title = 'Editar projeto';
+            this.dynamicText.btn = 'Salvar'
         }
 
         //MODO EDITAR
-        if (this.screenType == 'edit') {
-            (document.querySelector('#main-title') as any).innerText = "Editar projeto";
-            (document.querySelector('#action-button') as any).innerText = "Salvar";
+        if (this.screenType === 'create') {
+            this.dynamicText.title = 'Vamos cadastrar seu novo projeto!';
+            this.dynamicText.btn = 'Cadastrar'
         }
     }
 
+    isInvalid(inputName: string, validatorName: string){
+        const formControl: any = this.projectForm.get(inputName);
+
+        if (formControl.errors !== null){
+            return formControl.errors?.[validatorName] && formControl?.touched;
+        }
+    }
 }

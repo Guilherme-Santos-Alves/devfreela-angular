@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { IListItem } from './interfaces/IListItem';
 import { ListService } from './services/list.service';
 import { NavigationBehaviorOptions, Router } from '@angular/router';
+import { IProject } from 'src/app/shared/interfaces/IProject';
 
 @Component({
   selector: 'app-list',
@@ -13,7 +13,7 @@ export class ListComponent implements OnInit {
 
   constructor(private listService: ListService, private router: Router) {}
 
-  list: IListItem[] = [];
+  list: IProject[] = [];
   tableIsLoaded: boolean = false;
 
   ngOnInit(): void {
@@ -22,7 +22,7 @@ export class ListComponent implements OnInit {
 
   getProjects() {
     this.listService.getProjects().subscribe(
-      (response: IListItem[]) => {
+      (response: IProject[]) => {
         this.list = response;
         this.buildTable();
         this.tableIsLoaded = true;
@@ -32,14 +32,14 @@ export class ListComponent implements OnInit {
 
   buildTable() {
     const idClient = localStorage.getItem('idClient');
-    this.list = this.list.filter((listItem: IListItem) => listItem.idClient === Number(idClient));
+    this.list = this.list.filter((listItem: IProject) => listItem.idClient === Number(idClient));
   }
 
 
-  deleteProject(id: string) {
+  deleteProject(id: string | undefined) {
     this.listService.deleteProject(id).subscribe(
       (response) => {
-        this.list = this.list.filter((project: IListItem) => project.id != id);
+        this.list = this.list.filter((project: IProject) => project.id != id);
         this.buildTable();
       }
     )
@@ -49,7 +49,7 @@ export class ListComponent implements OnInit {
     this.router.navigateByUrl(url);
   }
 
-  redirectToWithParams(url: string, id: string) {
+  redirectToWithParams(url: string, id: string | undefined) {
     const dataParams: NavigationBehaviorOptions = {
       state: {
         id: id

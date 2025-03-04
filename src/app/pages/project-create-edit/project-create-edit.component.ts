@@ -6,6 +6,7 @@ import { IDynamicText } from './interfaces/IDynamicText';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { msg } from 'src/app/shared/util/msg';
 import { title } from 'process';
+import { Helpers } from 'src/app/shared/util/helpers';
 
 @Component({
   selector: 'app-project-create-edit',
@@ -27,7 +28,9 @@ export class ProjectCreateEditComponent implements OnInit {
         totalCost: ['', [Validators.required]],
         description: ['', [Validators.required]]
     })
+
     msg = msg;
+    helpers = Helpers;
 
     constructor(private router: Router, private ProjectCEService: ProjectCEService, private fb: FormBuilder) { 
         this.id = history.state.id;
@@ -95,14 +98,6 @@ export class ProjectCreateEditComponent implements OnInit {
         if (this.screenType === 'create') {
             this.dynamicText.title = 'Vamos cadastrar seu novo projeto!';
             this.dynamicText.btn = 'Cadastrar'
-        }
-    }
-
-    isInvalid(inputName: string, validatorName: string){
-        const formControl: any = this.projectForm.get(inputName);
-
-        if (formControl.errors !== null){
-            return formControl.errors?.[validatorName] && formControl?.touched;
         }
     }
 }

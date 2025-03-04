@@ -8,19 +8,19 @@
             <mat-form-field appearance="legacy">
                 <mat-label>Título</mat-label>
                 <input type="text" matInput formControlName="title">
-                <mat-error *ngIf="isInvalid('title', 'required')">{{ msg.required }}</mat-error>
+                <mat-error *ngIf="helpers.isInvalid(projectForm, 'title', 'required')">{{ msg.required }}</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="legacy">
                 <mat-label>Custo Total</mat-label>
                 <input type="text" matInput formControlName="totalCost" mask="separator.0" thousandSeparator=".">
-                <mat-error *ngIf="isInvalid('totalCost', 'required')">{{ msg.required }}</mat-error>
+                <mat-error *ngIf="helpers.isInvalid(projectForm, 'totalCost', 'required')">{{ msg.required }}</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="legacy">
                 <mat-label>Descrição</mat-label>
                 <textarea type="text" matInput formControlName="description"></textarea>
-                <mat-error *ngIf="isInvalid('description', 'required')">{{ msg.required }}</mat-error>
+                <mat-error *ngIf="helpers.isInvalid(projectForm, 'description', 'required')">{{ msg.required }}</mat-error>
             </mat-form-field>
 
             <ld-button type="submit" class="ld-button" typeBtn="submit" textBtn="{{dynamicText.btn}}"></ld-button>

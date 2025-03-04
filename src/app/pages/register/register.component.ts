@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { RegisterService } from './services/register.service';
 import { Router } from '@angular/router';
+import { Helpers } from 'src/app/shared/util/helpers';
 
 
 @Component({
@@ -20,6 +21,8 @@ export class RegisterComponent implements OnInit {
     constructor(private fb: FormBuilder, private registerService: RegisterService, private router: Router) { }
 
     msg = msg;
+    helpers = Helpers;
+
     registerForm :FormGroup = this.fb.group({
         role: ['', [Validators.required]],
         fullName: ['', [Validators.required]],
@@ -78,9 +81,4 @@ export class RegisterComponent implements OnInit {
             this.registerForm.markAllAsTouched();
         }
     }
-
-    isInvalid(inputName: string, validatorName: string){
-        return this.registerForm.get(inputName).errors?.[validatorName] && this.registerForm.get(inputName)?.touched;
-    }
-
 }

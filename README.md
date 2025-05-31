@@ -6,7 +6,7 @@ Front-End de uma plataforma de gerenciamento de projetos e trabalhos para desenv
 
 - Cadastro e edição de projetos
 - Cadastro e edição de usuários
-- Login de usuário
+- Login de usuário com autenticação de acesso
 
 ---
 
